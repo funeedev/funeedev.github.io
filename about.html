@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About — Why Give Native Languages to AI?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=VT323&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0420;
+    --bg-2:#140736;
+    --cyan:#00e5ff;
+    --magenta:#ff2bd6;
+    --orange:#ff8a2a;
+    --ink:#e9e6ff;
+    --ink-dim:#b7b0d9;
+    --grid:rgba(255,43,214,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Rajdhani',system-ui,sans-serif;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(255,43,214,.25), transparent 60%),
+      radial-gradient(900px 600px at -10% 20%, rgba(0,229,255,.22), transparent 60%),
+      radial-gradient(700px 500px at 50% 110%, rgba(255,138,42,.22), transparent 60%),
+      linear-gradient(180deg, #0a0420 0%, #140736 60%, #0a0420 100%);
+    overflow-x:hidden;
+  }
+  /* Grid floor */
+  .grid-floor{
+    position:fixed;
+    left:0;right:0;bottom:0;
+    height:45vh;
+    perspective:600px;
+    pointer-events:none;
+    z-index:0;
+    mask-image:linear-gradient(to top, black 20%, transparent 100%);
+  }
+  .grid-floor::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/60px 60px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/60px 60px;
+    transform:rotateX(60deg) translateZ(0);
+    transform-origin:bottom;
+    animation:grid 8s linear infinite;
+  }
+  @keyframes grid{
+    from{background-position:0 0, 0 0}
+    to{background-position:0 60px, 0 0}
+  }
+  /* Sun */
+  .sun{
+    position:fixed;
+    right:-60px; top:60px;
+    width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle at 50% 55%, #ff8a2a, #ff2bd6 60%, transparent 70%);
+    filter:blur(2px);
+    z-index:0;
+    box-shadow:0 0 120px rgba(255,43,214,.35);
+    opacity:.85;
+  }
+  .sun::after{
+    content:"";
+    position:absolute; inset:0; border-radius:50%;
+    background:
+      repeating-linear-gradient(to bottom, transparent 0 26px, rgba(10,4,32,.85) 26px 30px);
+    mask:radial-gradient(circle, black 55%, transparent 70%);
+  }
+
+  header.nav{
+    position:relative; z-index:5;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 40px;
+    border-bottom:1px solid rgba(0,229,255,.25);
+    backdrop-filter: blur(8px);
+    background:rgba(10,4,32,.35);
+  }
+  .brand{
+    font-family:'Orbitron',sans-serif;
+    letter-spacing:.22em;
+    font-weight:900;
+    font-size:14px;
+    color:var(--cyan);
+    text-shadow:0 0 10px rgba(0,229,255,.7);
+  }
+  .brand span{color:var(--magenta); text-shadow:0 0 10px rgba(255,43,214,.7);}
+  nav.links{display:flex; gap:14px; align-items:center}
+  nav.links a{
+    font-family:'Orbitron',sans-serif;
+    font-size:12px; letter-spacing:.25em;
+    text-decoration:none; color:var(--ink);
+    padding:10px 18px;
+    border:1px solid rgba(0,229,255,.5);
+    background:linear-gradient(180deg, rgba(0,229,255,.08), rgba(255,43,214,.06));
+    transition:all .2s ease;
+  }
+  nav.links a:hover{
+    color:#0a0420;
+    background:linear-gradient(180deg, var(--cyan), var(--magenta));
+    box-shadow:0 0 24px rgba(0,229,255,.6), 0 0 40px rgba(255,43,214,.35);
+  }
+  nav.links a.active{
+    color:var(--orange);
+    border-color:var(--orange);
+    text-shadow:0 0 12px rgba(255,138,42,.8);
+  }
+
+  main{
+    position:relative; z-index:2;
+    max-width:1080px;
+    margin:0 auto;
+    padding:80px 32px 160px;
+  }
+  .kicker{
+    font-family:'VT323',monospace;
+    font-size:22px;
+    color:var(--cyan);
+    letter-spacing:.08em;
+    text-shadow:0 0 12px rgba(0,229,255,.6);
+    margin-bottom:14px;
+  }
+  h1.title{
+    font-family:'Orbitron',sans-serif;
+    font-weight:900;
+    font-size:clamp(38px,6vw,72px);
+    line-height:1.05;
+    margin:0 0 20px;
+    color:#fff;
+    text-shadow:
+      0 0 12px rgba(0,229,255,.55),
+      0 0 32px rgba(255,43,214,.35);
+  }
+  h1.title em{
+    font-style:normal;
+    background:linear-gradient(90deg, var(--cyan), var(--magenta) 60%, var(--orange));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 14px rgba(255,43,214,.35));
+  }
+  .lede{
+    max-width:760px;
+    font-size:18px;
+    color:var(--ink-dim);
+    margin-bottom:56px;
+  }
+
+  /* Section header buttons */
+  .section-btn{
+    display:flex; align-items:center; justify-content:space-between; gap:24px;
+    width:100%;
+    text-align:left;
+    padding:22px 26px;
+    margin:22px 0 0;
+    background:linear-gradient(90deg, rgba(0,229,255,.10), rgba(255,43,214,.10) 60%, rgba(255,138,42,.10));
+    border:1px solid rgba(0,229,255,.35);
+    color:var(--ink);
+    cursor:pointer;
+    font-family:inherit;
+    position:relative;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .section-btn::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:6px;
+    background:linear-gradient(180deg,var(--cyan),var(--magenta),var(--orange));
+    box-shadow:0 0 18px rgba(255,43,214,.6);
+  }
+  .section-btn:hover{
+    transform:translateX(4px);
+    border-color:var(--magenta);
+    box-shadow:0 0 24px rgba(255,43,214,.35), inset 0 0 40px rgba(0,229,255,.08);
+  }
+  .section-btn .head{
+    font-family:'Orbitron',sans-serif;
+    font-weight:900;
+    font-size:clamp(20px,2.4vw,28px);
+    letter-spacing:.02em;
+    color:#fff;
+    text-shadow:0 0 10px rgba(0,229,255,.5);
+    display:block;
+    margin-bottom:6px;
+  }
+  .section-btn .sub{
+    display:block;
+    font-family:'VT323',monospace;
+    font-size:20px;
+    color:var(--orange);
+    letter-spacing:.02em;
+    text-shadow:0 0 8px rgba(255,138,42,.6);
+  }
+  .section-btn .chev{
+    font-family:'Orbitron',sans-serif;
+    font-size:14px;
+    color:var(--cyan);
+    border:1px solid var(--cyan);
+    padding:8px 12px;
+    letter-spacing:.2em;
+    transition:transform .2s ease, background .2s ease, color .2s ease;
+    text-shadow:0 0 8px rgba(0,229,255,.6);
+    flex-shrink:0;
+  }
+  .section-btn[aria-expanded="true"] .chev{
+    background:var(--cyan);
+    color:#0a0420;
+    text-shadow:none;
+  }
+  .section-body{
+    display:none;
+    padding:24px 26px 30px;
+    border:1px solid rgba(0,229,255,.2);
+    border-top:none;
+    background:rgba(10,4,32,.55);
+    backdrop-filter:blur(6px);
+  }
+  .section-btn[aria-expanded="true"] + .section-body{
+    display:block;
+    animation:slide .35s ease;
+  }
+  @keyframes slide{
+    from{opacity:0; transform:translateY(-6px)}
+    to{opacity:1; transform:translateY(0)}
+  }
+  .section-body p{
+    font-size:17px;
+    line-height:1.75;
+    color:var(--ink);
+    margin:0 0 16px;
+  }
+  .section-body p:last-child{margin-bottom:0}
+
+  /* Highlighted / linked text */
+  .hl{
+    color:var(--cyan);
+    text-decoration:none;
+    background:linear-gradient(transparent 60%, rgba(0,229,255,.18) 60%);
+    padding:0 4px;
+    border-bottom:1px dashed rgba(0,229,255,.6);
+    transition:all .18s ease;
+  }
+  .hl:hover{
+    color:#0a0420;
+    background:var(--magenta);
+    border-bottom-color:transparent;
+    box-shadow:0 0 14px rgba(255,43,214,.55);
+  }
+  .hl sup{
+    font-family:'VT323',monospace;
+    font-size:14px;
+    color:var(--orange);
+    margin-left:3px;
+    text-shadow:0 0 6px rgba(255,138,42,.7);
+  }
+  .hl:hover sup{color:#0a0420; text-shadow:none;}
+
+  /* References */
+  .refs-wrap{
+    margin-top:80px;
+    padding:32px;
+    border:1px solid rgba(255,138,42,.35);
+    background:rgba(10,4,32,.6);
+    backdrop-filter:blur(6px);
+  }
+  .refs-wrap h2{
+    font-family:'Orbitron',sans-serif;
+    font-size:22px;
+    color:var(--orange);
+    margin:0 0 20px;
+    letter-spacing:.15em;
+    text-shadow:0 0 12px rgba(255,138,42,.5);
+  }
+  ol.refs{
+    columns:2; column-gap:36px;
+    padding:0; margin:0; list-style:none;
+    counter-reset:ref;
+    font-family:'VT323',monospace;
+    font-size:16px;
+    line-height:1.5;
+  }
+  ol.refs li{
+    counter-increment:ref;
+    break-inside:avoid;
+    margin:0 0 10px;
+    padding-left:34px;
+    position:relative;
+    color:var(--ink-dim);
+    scroll-margin-top:100px;
+  }
+  ol.refs li::before{
+    content:"["counter(ref)"]";
+    position:absolute; left:0; top:0;
+    color:var(--magenta);
+    text-shadow:0 0 8px rgba(255,43,214,.55);
+  }
+  ol.refs li a{color:var(--cyan); text-decoration:none; word-break:break-all;}
+  ol.refs li a:hover{color:var(--orange); text-shadow:0 0 8px rgba(255,138,42,.6);}
+  ol.refs li:target{
+    color:#fff;
+    background:linear-gradient(90deg, rgba(255,43,214,.25), transparent);
+    padding-top:4px; padding-bottom:4px;
+  }
+  ol.refs li.internal{color:var(--ink)}
+  ol.refs li.internal em{color:var(--orange); font-style:normal}
+
+  footer{
+    position:relative; z-index:2;
+    text-align:center;
+    padding:24px;
+    font-family:'VT323',monospace;
+    color:var(--ink-dim);
+    border-top:1px solid rgba(0,229,255,.2);
+  }
+  footer span{color:var(--magenta)}
+
+  @media (max-width:720px){
+    header.nav{padding:16px 20px}
+    nav.links a{padding:8px 12px; font-size:11px; letter-spacing:.18em}
+    main{padding:48px 20px 120px}
+    ol.refs{columns:1}
+    .section-btn{padding:18px 18px 18px 22px}
+    .section-btn .chev{padding:6px 8px; font-size:11px}
+  }
+</style>
+</head>
+<body>
+  <div class="sun" aria-hidden="true"></div>
+  <div class="grid-floor" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="brand">NATIVE<span>//</span>LANG<span>_</span>REVIVAL</div>
+    <nav class="links">
+      <a href="https://about.lakotanexus.com" data-testid="nav-home">HOME</a>
+      <a href="https://lakotanexus.com" class="active" data-testid="nav-about">ABOUT</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="kicker">// TRANSMISSION_01 :: ABOUT</div>
+    <h1 class="title">Why Give <em>Native Languages</em> to AI?</h1>
+    <p class="lede">
+      A manifesto for the Native American Language Revitalization Project — preserving endangered
+      tongues, resisting erasure, and building lightweight AI that serves communities instead of consuming them.
+    </p>
+
+    <!-- SECTION 1 -->
+    <button class="section-btn" aria-expanded="true" data-testid="section-btn-1">
+      <span>
+        <span class="head">Inevitability of Extinction</span>
+        <span class="sub">In the near future, potentially all first-language speakers will have passed away.</span>
+      </span>
+      <span class="chev">READ</span>
+    </button>
+    <div class="section-body">
+      <p>
+        In the Lakota language alone, in the ten-year span between 2006 and 2016, approximately 4,000
+        fluent speakers passed away —
+        <a class="hl" href="#ref-1" data-testid="hl-1-1">an approximate 66% decrease<sup>[1]</sup></a>.
+        There have been recent efforts through several Lakota revitalization initiatives
+        (<a class="hl" href="#ref-2" data-testid="hl-1-2">one such example<sup>[2]</sup></a>), and a
+        &ldquo;reawakening&rdquo; of the language is currently being witnessed. However, these efforts alone
+        have not been enough to revive the dying language, as few to no first-language speakers are being born
+        today. Only roughly 1% of Lakota people are fluent speakers, compared to the
+        <a class="hl" href="#ref-3" data-testid="hl-1-3">113,713 self-identified Sioux members from the U.S. Census<sup>[3]</sup></a>.
+        This is further worsened by the fact that many of the remaining first-language speakers are elderly, with
+        <a class="hl" href="#ref-4" data-testid="hl-1-4">an average age well into their 60s<sup>[4]</sup></a>.
+      </p>
+      <p>
+        These figures represent only the Lakota language, yet similar patterns appear across nearly every
+        other Native American language
+        (<a class="hl" href="#ref-6" data-testid="hl-1-6">2025 Census Report<sup>[6]</sup></a>).
+        This is a tragic reality caused by the inhumane conditions that founded the United States, as discussed in
+        <a class="hl" href="#ref-5" data-testid="hl-1-5">this section<sup>[5]</sup></a>.
+        Unfortunately, those events are effectively irreversible given the country&rsquo;s immense socioeconomic
+        power &mdash;
+        <a class="hl" href="#ref-7" data-testid="hl-1-7">the highest GDP of any nation<sup>[7]</sup></a>.
+        The Native American Language Revitalization Project does not aim to reverse these conditions, but to
+        provide modern access to these languages within the digital ecosystem. Additionally, we hope to help
+        mass-produce learning resources for new Lakota speakers, as discussed in
+        <a class="hl" href="#ref-8" data-testid="hl-1-8">this section<sup>[8]</sup></a>, so that human speakers can
+        continue to become fluent in the language even after all currently living first-language speakers have
+        taken their journey into the spirit world.
+      </p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <button class="section-btn" aria-expanded="false" data-testid="section-btn-2">
+      <span>
+        <span class="head">Production of New Learning Resources</span>
+        <span class="sub">Eliminating the need to depend on the English language.</span>
+      </span>
+      <span class="chev">READ</span>
+    </button>
+    <div class="section-body">
+      <p>
+        The Native American Language Revitalization Project hopes to eliminate &mdash; or at the very least
+        mitigate &mdash; the need for people to learn English simply to participate in the modern world.
+        Globally,
+        <a class="hl" href="#ref-9" data-testid="hl-2-9">English is by far the most dominant language<sup>[9]</sup></a>.
+        Although it ranks only third by
+        <a class="hl" href="#ref-11" data-testid="hl-2-11">native speakers<sup>[11]</sup></a>, English has the
+        highest number of
+        <a class="hl" href="#ref-10" data-testid="hl-2-10">total fluent speakers<sup>[10]</sup></a>.
+        This is due to the immense
+        <a class="hl" href="#ref-7" data-testid="hl-2-7">GDP<sup>[7]</sup></a> of the United States, combined
+        with how deeply English has become embedded in
+        <a class="hl" href="#ref-12" data-testid="hl-2-12">global celebrity culture<sup>[12]</sup></a>.
+        Existing in the world without knowing English has become extremely difficult. The vast majority of
+        online content &mdash; social media, films, television, and more &mdash; is available in
+        <a class="hl" href="#ref-13" data-testid="hl-2-13">the English language<sup>[13]</sup></a>. In contrast,
+        almost no digital content is available in Lakota
+        (<a class="hl" href="#ref-14" data-testid="hl-2-14">a small Wikipedia list of films<sup>[14]</sup></a>).
+        This same trend exists across every Native American language; we simply use Lakota as our example, as it
+        is the first language we support.
+      </p>
+      <p>
+        We hope to make digital content accessible to Native Americans around the world in their tribal
+        language. Artificial Intelligence enables nearly any form of media to be translated into these languages,
+        so no one has to miss out because of a language barrier. While AI cannot replace human speakers, it can
+        help humans learn to speak a language by allowing them to quickly correlate concepts from their
+        favorite shows, films, and books with the corresponding words.
+        <a class="hl" href="#ref-15" data-testid="hl-2-15">Research shows that visual anchors<sup>[15]</sup></a>
+        can significantly increase the rate at which someone learns a language. As we continue to improve
+        the accuracy of the languages supported by the Native American Language Revitalization Project, we plan
+        to release tools for translating digital content instantly. We hope to provide browser extensions,
+        keyboard widgets, and OCR technology for uploading photos, e-books, PDFs, and more, translating them
+        into a chosen language within seconds.
+      </p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <button class="section-btn" aria-expanded="false" data-testid="section-btn-3">
+      <span>
+        <span class="head">A Violent History</span>
+        <span class="sub">Preventing the U.S. from causing further damage.</span>
+      </span>
+      <span class="chev">READ</span>
+    </button>
+    <div class="section-body">
+      <p>
+        During the founding of the United States, the country
+        <a class="hl" href="#ref-16" data-testid="hl-3-16">successfully destroyed Native American languages<sup>[16]</sup></a>
+        and
+        <a class="hl" href="#ref-17" data-testid="hl-3-17">induced trauma that continues to persist<sup>[17]</sup></a>
+        to this very day. Federal policies such as the Civilization Fund Act of 1819 funded boarding schools where
+        Native children were stolen from their families, forced to have their hair cut, assigned English names,
+        pushed into colonialist religions, and, above all, prevented from speaking any language other than English.
+        By forcing them into English from a young age, these policies caused them to
+        <a class="hl" href="#ref-18" data-testid="hl-3-18">forget their native language during the most critical developmental period<sup>[18]</sup></a>.
+      </p>
+      <p>
+        While the U.S. has made
+        <a class="hl" href="#ref-19" data-testid="hl-3-19">some attempts to protect these languages from extinction<sup>[19]</sup></a>,
+        it cannot undo the damage that has already been done. By allowing these languages to go extinct, we
+        allow the sins committed during that era to continue causing harm hundreds of years later. The Native
+        American Language Revitalization Project hopes to take a drastic leap forward in language revitalization,
+        far beyond what the remaining fluent speakers can achieve on their own. The number of remaining fluent
+        speakers is dwindling rapidly, and once all have passed on, it will be essentially impossible to recover
+        the language.
+      </p>
+    </div>
+
+    <!-- SECTION 4 -->
+    <button class="section-btn" aria-expanded="false" data-testid="section-btn-4">
+      <span>
+        <span class="head">The Damages of AI</span>
+        <span class="sub">Mitigating the harm caused by artificial intelligence.</span>
+      </span>
+      <span class="chev">READ</span>
+    </button>
+    <div class="section-body">
+      <p>
+        The rise of Artificial Intelligence is having a deeply unfortunate impact on the sustainability of our
+        planet. AI data centers are producing immense &mdash; and potentially irreversible &mdash; harm to the
+        environment, including excessive water usage, enormous electricity demand, and harmful emissions. This
+        is unacceptable and will affect both current and future generations. We are already seeing prices
+        skyrocket, including
+        <a class="hl" href="#ref-27" data-testid="hl-4-27">RAM prices<sup>[27]</sup></a> and
+        <a class="hl" href="#ref-28" data-testid="hl-4-28">electricity prices<sup>[28]</sup></a>. The impact
+        extends far beyond economics: people are beginning to
+        <a class="hl" href="#ref-24" data-testid="hl-4-24">lose their jobs<sup>[24]</sup></a> and
+        <a class="hl" href="#ref-25" data-testid="hl-4-25">lose their homes<sup>[25]</sup></a>.
+      </p>
+      <p>
+        Through the use of extremely lightweight AI models &mdash; less than 0.1% the size of typical modern
+        models &mdash; and techniques such as
+        <a class="hl" href="#ref-29" data-testid="hl-4-29">quantization<sup>[29]</sup></a> and
+        <a class="hl" href="#ref-30" data-testid="hl-4-30">knowledge distillation<sup>[30]</sup></a>, our models
+        are small enough to run on consumer-grade GPUs and, in some cases, even on phones. This means we only
+        need to rely on water-based cooling solutions during the initial training phase. In addition, we plan to
+        <a class="hl" href="#ref-26" data-testid="hl-4-26">expand beyond translator AI models<sup>[26]</sup></a>.
+        We want to produce specialized AIs for narrow tasks, so that the same lightweight approach can
+        prevent misuse and accelerate humans rather than replace them. We are also taking
+        <a class="hl" href="#ref-23" data-testid="hl-4-23">measures to prevent our data from being used by other AI systems<sup>[23]</sup></a>.
+      </p>
+    </div>
+
+    <!-- SECTION 5 -->
+    <button class="section-btn" aria-expanded="false" data-testid="section-btn-5">
+      <span>
+        <span class="head">Data Sovereignty</span>
+        <span class="sub">Addressing concerns about the use of the language by AI and by non-Native Americans.</span>
+      </span>
+      <span class="chev">READ</span>
+    </button>
+    <div class="section-body">
+      <p>
+        For many valid reasons, Native American tribes and speakers want to keep their data sovereign.
+        <a class="hl" href="#ref-31" data-testid="hl-5-31">They share the belief<sup>[31]</sup></a>
+        that it is the right of a nation to govern the collection, ownership, and application of its own data.
+        Alongside this, some express concerns about AI being trained on Native American languages at all. These
+        beliefs are grounded in good intentions, and we take every feasible measure to respect and protect data
+        sovereignty, as well as to prevent other AI systems from accessing our data.
+      </p>
+      <p>
+        Firstly, the Native American Language Project was founded and is led by a creator who not only carries
+        Lakota and Choctaw DNA, but who also grew up on a Native American reservation throughout his middle
+        school and high school years. Additionally, this is not the only project attempting to use AI to
+        preserve Native American languages; other efforts &mdash; such as
+        <a class="hl" href="#ref-33" data-testid="hl-5-33">First Languages AI Reality<sup>[33]</sup></a>,
+        <a class="hl" href="#ref-34" data-testid="hl-5-34">Lakota BERT<sup>[34]</sup></a>, and the
+        <a class="hl" href="#ref-35" data-testid="hl-5-35">Lakota AI Code Camp<sup>[35]</sup></a> &mdash; are
+        pursuing similar goals.
+      </p>
+      <p>
+        Secondly, we have taken concrete measures to respect and protect data sovereignty. We use rate limits,
+        CAPTCHAs, and
+        <a class="hl" href="#ref-26" data-testid="hl-5-26">paywalls<sup>[26]</sup></a> to prevent other AI
+        companies from harvesting the data our systems produce. Our AI was trained primarily without the help of
+        pre-existing human-created data, combined with publicly available learning material that other AI
+        companies also have access to. However, by providing mass translation capabilities, if this data is
+        publicly shared, it will be impossible to guarantee it can never be used by another AI. As discussed in
+        <a class="hl" href="#ref-8" data-testid="hl-5-8">this section<sup>[8]</sup></a>, we believe the benefits
+        of doing so outweigh the risks.
+      </p>
+      <p>
+        Thirdly, we do not believe Native American languages should be restricted only to Native American
+        speakers.
+        <a class="hl" href="#ref-32" data-testid="hl-5-32">One article<sup>[32]</sup></a> argues persuasively for
+        the importance of passing these languages on more broadly. Furthermore, what defines a Native American
+        in the first place?
+        <a class="hl" href="#ref-36" data-testid="hl-5-36">Blood quantum<sup>[36]</sup></a> illustrates the
+        deep problems with imposing a minimum blood percentage to determine identity. Given how small a
+        percentage of the U.S. population is Native American, restricting the language to full-blood Native
+        Americans is neither realistic nor ethical. Additionally, restricting a language to a single ethnicity
+        constitutes a form of
+        <a class="hl" href="#ref-37" data-testid="hl-5-37">linguistic racism<sup>[37]</sup></a>.
+      </p>
+    </div>
+
+    <!-- SECTION 6 -->
+    <button class="section-btn" aria-expanded="false" data-testid="section-btn-6">
+      <span>
+        <span class="head">Monetization of Native Languages</span>
+        <span class="sub">The complicated issue of charging a fee.</span>
+      </span>
+      <span class="chev">READ</span>
+    </button>
+    <div class="section-body">
+      <p>
+        We do offer paid subscriptions for access to our translator services, but we do so with the best of
+        intentions. Free alternatives are available for anyone who cannot afford a premium subscription, and we
+        offer generous discounts to schools, companies, and other organizations that provide access to this
+        resource for learning-based purposes. In addition, paid tiers help restrict other AI systems from
+        obtaining our data by limiting generative capabilities on the free tier.
+      </p>
+      <p>
+        The reason for this is simple: AI is expensive to train and operate. Premium subscriptions allow us to
+        expand this translator to more Native American languages and to produce new learning resources at a
+        much faster pace. Additionally, as discussed in
+        <a class="hl" href="#ref-22" data-testid="hl-6-22">this section<sup>[22]</sup></a>, we hope to expand our
+        approach beyond translative AI. There are many dangers to AI, and we want to provide a safer
+        alternative.
+      </p>
+    </div>
+
+    <!-- REFERENCES -->
+    <section class="refs-wrap" aria-labelledby="refs-title">
+      <h2 id="refs-title">// REFERENCES &amp; INDEX</h2>
+      <ol class="refs">
+        <li id="ref-1"><a href="https://www.lakotatimes.com/articles/lakota-language-revitalization/" target="_blank" rel="noopener">lakotatimes.com — Lakota language revitalization</a></li>
+        <li id="ref-2"><a href="https://escholarship.org/uc/item/6zc0w7sb" target="_blank" rel="noopener">escholarship.org — Revitalization project</a></li>
+        <li id="ref-3"><a href="https://www.encyclopedia.com/humanities/encyclopedias-almanacs-transcripts-and-maps/sioux-nations-lakota" target="_blank" rel="noopener">encyclopedia.com — Sioux Nations / Lakota</a></li>
+        <li id="ref-4"><a href="https://blog.stjo.org/joining-the-fight-to-revitalize-the-lakota-language/" target="_blank" rel="noopener">blog.stjo.org — Joining the fight to revitalize Lakota</a></li>
+        <li id="ref-5" class="internal"><em>Internal:</em> See section &ldquo;A Violent History&rdquo; on this page.</li>
+        <li id="ref-6"><a href="https://www.census.gov/library/stories/2023/10/2020-census-dhc-a-aian-population.html" target="_blank" rel="noopener">census.gov — 2020 Census AIAN population</a></li>
+        <li id="ref-7"><a href="https://www.worldometers.info/gdp/gdp-by-country/" target="_blank" rel="noopener">worldometers.info — GDP by country</a></li>
+        <li id="ref-8" class="internal"><em>Internal:</em> See section &ldquo;Production of New Learning Resources&rdquo; on this page.</li>
+        <li id="ref-9"><a href="https://www.nationalreview.com/2019/11/english-language-important-america-source-of-social-cohesion/" target="_blank" rel="noopener">nationalreview.com — Importance of English</a></li>
+        <li id="ref-10"><a href="https://www.statista.com/statistics/266808/the-most-spoken-languages-worldwide/" target="_blank" rel="noopener">statista.com — Most spoken languages worldwide</a></li>
+        <li id="ref-11"><a href="https://en.wikipedia.org/wiki/List_of_languages_by_number_of_native_speakers" target="_blank" rel="noopener">wikipedia — Languages by native speakers</a></li>
+        <li id="ref-12"><a href="https://www.pulse.com.gh/story/10-countries-with-the-highest-number-of-global-celebrities-2026031018554813457" target="_blank" rel="noopener">pulse.com.gh — Countries with the most global celebrities</a></li>
+        <li id="ref-13"><a href="https://www.researchgate.net/publication/26578141_Top_languages_in_global_information_production" target="_blank" rel="noopener">researchgate.net — Top languages in global info production</a></li>
+        <li id="ref-14"><a href="https://en.wikipedia.org/wiki/Category:Lakota-language_films" target="_blank" rel="noopener">wikipedia — Lakota-language films</a></li>
+        <li id="ref-15"><a href="https://medium.com/language-lab/can-you-really-learn-a-language-by-watching-tv-414282890552" target="_blank" rel="noopener">medium.com — Learning a language via TV</a></li>
+        <li id="ref-16"><a href="https://www.britannica.com/video/Grey-Shea-Anishinaabemowin-speaker-Indigenous-residential-schools/-318726" target="_blank" rel="noopener">britannica.com — Indigenous residential schools</a></li>
+        <li id="ref-17"><a href="https://www.culturalsurvival.org/publications/cultural-survival-quarterly/saving-americas-endangered-languages" target="_blank" rel="noopener">culturalsurvival.org — Saving America&rsquo;s endangered languages</a></li>
+        <li id="ref-18"><a href="https://pubmed.ncbi.nlm.nih.gov/25075996/" target="_blank" rel="noopener">pubmed — Language acquisition critical periods</a></li>
+        <li id="ref-19"><a href="https://www.ncai.org/news/ncai-protection-of-native-languages" target="_blank" rel="noopener">ncai.org — Protection of Native languages</a></li>
+        <li id="ref-20"><a href="https://unu.edu/inweh/news/environmental-cost-of-AIs-Enrgy-use-carbon-water-and-land-footprints" target="_blank" rel="noopener">unu.edu — Environmental cost of AI energy use</a></li>
+        <li id="ref-21"><a href="https://www.unesco.org/en/articles/deepfakes-and-crisis-knowing" target="_blank" rel="noopener">unesco.org — Deepfakes and the crisis of knowing</a></li>
+        <li id="ref-22" class="internal"><em>Internal:</em> See section &ldquo;The Damages of AI&rdquo; on this page.</li>
+        <li id="ref-23" class="internal"><em>Internal:</em> See section &ldquo;Data Sovereignty&rdquo; on this page.</li>
+        <li id="ref-24"><a href="https://insights.som.yale.edu/insights/the-real-job-destruction-from-ai-is-hitting-before-careers-can-start" target="_blank" rel="noopener">yale insights — Real job destruction from AI</a></li>
+        <li id="ref-25"><a href="https://www.cbsnews.com/news/georgia-power-ai-data-centers-eminent-domain/" target="_blank" rel="noopener">cbsnews.com — AI data centers &amp; eminent domain</a></li>
+        <li id="ref-26" class="internal"><em>Internal:</em> See section &ldquo;Monetization of Native Languages&rdquo; on this page.</li>
+        <li id="ref-27"><a href="https://coe.northeastern.edu/news/the-boom-of-ai-is-behind-the-surge-in-ram-prices/" target="_blank" rel="noopener">northeastern.edu — AI boom &amp; RAM prices</a></li>
+        <li id="ref-28"><a href="https://www.tomshardware.com/tech-industry/ai-data-centers-trigger-massive-irreversible-76-percent-electricity-price-spike-in-largest-us-region-federal-watchdog-demands-tech-giants-pay-for-their-own-power-infrastructure" target="_blank" rel="noopener">tomshardware.com — AI data centers &amp; electricity spike</a></li>
+        <li id="ref-29"><a href="https://www.qualcomm.com/news/onq/2019/03/heres-why-quantization-matters-ai" target="_blank" rel="noopener">qualcomm.com — Why quantization matters for AI</a></li>
+        <li id="ref-30"><a href="https://arxiv.org/abs/1503.02531" target="_blank" rel="noopener">arxiv.org — Knowledge distillation (Hinton et al.)</a></li>
+        <li id="ref-31"><a href="https://nni.arizona.edu/our-work/research-policy-analysis/indigenous-data-sovereignty-governance" target="_blank" rel="noopener">nni.arizona.edu — Indigenous data sovereignty</a></li>
+        <li id="ref-32"><a href="https://macleans.ca/society/why-indigenous-languages-should-be-taught-alongside-french-and-english/" target="_blank" rel="noopener">macleans.ca — Teaching Indigenous languages</a></li>
+        <li id="ref-33"><a href="https://mila.quebec/en/ai4humanity/applied-projects/first-languages-ai-reality" target="_blank" rel="noopener">mila.quebec — First Languages AI Reality</a></li>
+        <li id="ref-34"><a href="https://www.sciencedirect.com/science/article/pii/S1877050925009706" target="_blank" rel="noopener">sciencedirect.com — Lakota BERT</a></li>
+        <li id="ref-35"><a href="https://www.indigenouscop.org/childcare-youth-activities/lakota-ai-code-camp" target="_blank" rel="noopener">indigenouscop.org — Lakota AI Code Camp</a></li>
+        <li id="ref-36"><a href="https://www.npr.org/sections/codeswitch/2018/02/09/583987261/so-what-exactly-is-blood-quantum" target="_blank" rel="noopener">npr.org — Blood quantum explained</a></li>
+        <li id="ref-37"><a href="https://www.bbc.com/worklife/article/20210528-the-pervasive-problem-of-linguistic-racism" target="_blank" rel="noopener">bbc.com — Linguistic racism</a></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <span>//</span> NATIVE AMERICAN LANGUAGE REVITALIZATION PROJECT <span>//</span> ABOUT PAGE <span>//</span>
+  </footer>
+
+<script>
+  // Section toggle
+  document.querySelectorAll('.section-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      var chev = btn.querySelector('.chev');
+      if (chev) chev.textContent = expanded ? 'READ' : 'CLOSE';
+    });
+  });
+
+  // When clicking a highlighted ref link, auto-expand the section if it's an internal jump
+  document.querySelectorAll('a.hl').forEach(function(a){
+    a.addEventListener('click', function(){
+      var id = a.getAttribute('href');
+      if (!id) return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      // If the target is inside a collapsed section body, expand it
+      var body = target.closest('.section-body');
+      if (body){
+        var b = body.previousElementSibling;
+        if (b && b.classList.contains('section-btn') && b.getAttribute('aria-expanded') !== 'true'){
+          b.click();
+        }
+      }
+    });
+  });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1bd860e9ec2e663',t:'MTc4NDE2ODM4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"7f7b0fd8732c4326aae4b9d58d5c514a","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
