@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Home — Under Construction</title>
+<title>Home — Launching Soon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=VT323&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@
   }
   h1{
     font-family:'Orbitron',sans-serif; font-weight:900;
-    font-size:clamp(40px,7vw,88px); line-height:1;
+    font-size:clamp(36px,6vw,72px); line-height:1;
     margin:0 0 22px;
     background:linear-gradient(90deg, var(--cyan), var(--magenta) 55%, var(--orange));
     -webkit-background-clip:text; background-clip:text; color:transparent;
@@ -107,6 +107,40 @@
     margin:0 auto 40px;
   }
   p.msg em{color:var(--cyan); font-style:normal; text-shadow:0 0 10px rgba(0,229,255,.5)}
+
+  /* Countdown */
+  .countdown{
+    display:flex; gap:18px; flex-wrap:wrap; justify-content:center;
+    margin:0 auto 40px;
+  }
+  .cbox{
+    min-width:110px;
+    padding:18px 14px;
+    border:1px solid rgba(0,229,255,.5);
+    background:linear-gradient(180deg, rgba(0,229,255,.08), rgba(255,43,214,.06));
+    box-shadow:0 0 22px rgba(0,229,255,.15) inset;
+  }
+  .cbox .num{
+    font-family:'Orbitron',sans-serif; font-weight:900;
+    font-size:clamp(30px,5vw,52px); line-height:1;
+    color:var(--cyan);
+    text-shadow:0 0 16px rgba(0,229,255,.65);
+    font-variant-numeric:tabular-nums;
+  }
+  .cbox .lbl{
+    margin-top:8px;
+    font-family:'Orbitron',sans-serif; font-size:11px; letter-spacing:.28em;
+    color:var(--magenta); text-shadow:0 0 10px rgba(255,43,214,.6);
+  }
+  .target-line{
+    font-family:'VT323',monospace;
+    color:rgba(233,230,255,.65);
+    letter-spacing:.1em;
+    font-size:18px;
+    margin:0 0 46px;
+  }
+  .target-line em{color:var(--orange); font-style:normal; text-shadow:0 0 10px rgba(255,138,42,.5)}
+
   .cta{
     display:inline-block;
     font-family:'Orbitron',sans-serif; font-weight:700;
@@ -142,12 +176,62 @@
   </header>
 
   <main>
-    <div class="warn">// SIGNAL_LOST</div>
-    <h1><span class="glitch">This page is currently under construction.</span></h1>
-    <p class="msg">The website is not available yet. <em>Please come back later</em> — the home page will be online soon.</p>
+    <div class="warn">// SIGNAL_INCOMING</div>
+    <h1><span class="glitch">We launch soon.</span></h1>
+    <p class="msg">The site is powering up. <em>Countdown to launch</em> is below.</p>
+
+    <div class="countdown" id="countdown" aria-live="polite">
+      <div class="cbox"><div class="num" id="cd-days">00</div><div class="lbl">DAYS</div></div>
+      <div class="cbox"><div class="num" id="cd-hours">00</div><div class="lbl">HRS</div></div>
+      <div class="cbox"><div class="num" id="cd-mins">00</div><div class="lbl">MIN</div></div>
+      <div class="cbox"><div class="num" id="cd-secs">00</div><div class="lbl">SEC</div></div>
+    </div>
+    <p class="target-line">TARGET: <em>Saturday, August 1, 2026 — 2:00 PM MST</em></p>
+
     <a href="https://about.lakotanexus.com" class="cta" data-testid="cta-about">VISIT THE ABOUT PAGE →</a>
     <div class="barcode">||| ||  ||||  |  ||| ||||  ||  ||| |  ||||  ||  |||</div>
   </main>
+
+  <script>
+    // MST is a fixed UTC-7 offset (Arizona-style, no daylight saving)
+    var targetDate = new Date("2026-08-01T14:00:00-07:00");
+
+    function pad(n){ return String(n).padStart(2,'0'); }
+
+    function updateCountdown(){
+      var now = new Date();
+      var diff = targetDate - now;
+      var daysEl = document.getElementById('cd-days');
+      var hoursEl = document.getElementById('cd-hours');
+      var minsEl = document.getElementById('cd-mins');
+      var secsEl = document.getElementById('cd-secs');
+
+      if (diff <= 0){
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minsEl.textContent = '00';
+        secsEl.textContent = '00';
+        document.querySelector('.warn').textContent = '// LIVE_NOW';
+        document.querySelector('h1 .glitch').textContent = "We're live!";
+        return;
+      }
+
+      var totalSeconds = Math.floor(diff / 1000);
+      var days = Math.floor(totalSeconds / 86400);
+      var hours = Math.floor((totalSeconds % 86400) / 3600);
+      var mins = Math.floor((totalSeconds % 3600) / 60);
+      var secs = totalSeconds % 60;
+
+      daysEl.textContent = pad(days);
+      hoursEl.textContent = pad(hours);
+      minsEl.textContent = pad(mins);
+      secsEl.textContent = pad(secs);
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1bd8618ac46e663',t:'MTc4NDE2ODM4NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"7f7b0fd8732c4326aae4b9d58d5c514a","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
